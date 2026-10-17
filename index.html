@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator KPR CIMB Niaga Syariah - Bukit Shafa Residence</title>
+    <style>
+        :root {
+            --primary: #800020;
+            --primary-light: #a31c3f;
+            --gold: #d4af37;
+            --gold-light: #f9f1d8;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --border: #cbd5e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .calculator-card {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #600018, var(--primary));
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .badge-periode {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--gold);
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 10px;
+        }
+
+        .form-container {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #4a5568;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.15);
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .radio-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: #f8fafc;
+            color: #4a5568;
+        }
+
+        .radio-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-calculate {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .result-container {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            display: none;
+        }
+
+        .result-header {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 6px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .result-label {
+            color: #64748b;
+        }
+
+        .result-value {
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .result-value.highlight {
+            color: var(--primary);
+            font-size: 1.05rem;
+        }
+
+        .table-res {
+            width: 100%;
+            margin-top: 12px;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .table-res th, .table-res td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table-res th {
+            background-color: var(--gold-light);
+            color: #554100;
+        }
+
+        .note {
+            font-size: 0.75rem;
+            color: #718096;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        @media (max-width: 480px) {
+            .row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <div class="header">
+        <h1>PRICING MORTGAGE</h1>
+        <p>CIMB NIAGA SYARIAH - BUKIT SHAFA RESIDENCE</p>
+        <div class="badge-periode">Periode Sept 2026 - Jan 2027</div>
+    </div>
+
+    <div class="form-container">
+        <div class="form-group">
+            <label>Harga Property / Rumah (Rp)</label>
+            <input type="text" id="hargaProperty" placeholder="Contoh: 1.153.000.000" oninput="updateCalculations()">
+        </div>
+
+        <div class="row">
+            <div class="col form-group">
+                <label>Uang Muka / DP (%)</label>
+                <input type="number" id="dpPersen" value="15" min="0" max="90" oninput="updateDPFromPercent()">
+            </div>
+            <div class="col form-group">
+                <label>Nominal DP (Rp)</label>
+                <input type="text" id="dpNominal" placeholder="0" oninput="updatePercentFromDP()">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Pilih Skema Pembiayaan</label>
+            <div class="radio-group">
+                <div class="radio-btn active" id="btnBerjenjang" onclick="selectScheme('berjenjang')">
+                    FIX BERJENJANG
+                </div>
+                <div class="radio-btn" id="btnPasti" onclick="selectScheme('pasti')">
+                    PASTI FIXED
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Jangka Waktu / Tenor (Tahun)</label>
+            <select id="tenor">
+                <!-- Diisi otomatis oleh JS -->
+            </select>
+        </div>
+
+        <button class="btn-calculate" onclick="calculateMortgage()">Hitung Simulasi Angsuran</button>
+
+        <div class="result-container" id="resultBox">
+            <div class="result-header">Hasil Simulasi Angsuran</div>
+            
+            <div class="result-item">
+                <span class="result-label">Plafon Pembiayaan (KPR):</span>
+                <span class="result-value" id="resPlafon">Rp 0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Skema Dipilih:</span>
+                <span class="result-value" id="resSkema">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Tenor:</span>
+                <span class="result-value" id="resTenor">-</span>
+            </div>
+
+            <div id="angsuranDetail"></div>
+
+            <p class="note">* Perhitungan di atas merupakan estimasi angsuran bulanan berdasarkan margin/ujrah indikatif CIMB Niaga SyARIAH.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentScheme = 'berjenjang';
+
+    function initTenorOptions() {
+        const tenorSelect = document.getElementById('tenor');
+        tenorSelect.innerHTML = '';
+
+        if (currentScheme === 'berjenjang') {
+            for (let i = 10; i <= 25; i++) {
+                let opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i + ' Tahun';
+                tenorSelect.appendChild(opt);
+            }
+        } else {
+            for (let i = 1; i <= 20; i++) {
+                let opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i + ' Tahun';
+                tenorSelect.appendChild(opt);
+            }
+        }
+    }
+
+    function selectScheme(scheme) {
+        currentScheme = scheme;
+        const btnB = document.getElementById('btnBerjenjang');
+        const btnP = document.getElementById('btnPasti');
+
+        if (scheme === 'berjenjang') {
+            btnB.classList.add('active');
+            btnP.classList.remove('active');
+        } else {
+            btnP.classList.add('active');
+            btnB.classList.remove('active');
+        }
+        initTenorOptions();
+    }
+
+    function cleanNumber(val) {
+        if (!val) return 0;
+        return parseInt(val.toString().replace(/\D/g, ''), 10) || 0;
+    }
+
+    function formatNumber(num) {
+        if (!num || isNaN(num)) return '';
+        return num.toLocaleString('id-ID');
+    }
+
+    function formatRupiahNum(num) {
+        return 'Rp ' + Math.round(num).toLocaleString('id-ID');
+    }
+
+    function updateCalculations() {
+        let el = document.getElementById('hargaProperty');
+        let val = cleanNumber(el.value);
+        el.value = formatNumber(val);
+        updateDPFromPercent();
+    }
+
+    function updateDPFromPercent() {
+        let harga = cleanNumber(document.getElementById('hargaProperty').value);
+        let dpPersen = parseFloat(document.getElementById('dpPersen').value) || 0;
+        
+        if (harga > 0) {
+            let dpNominal = Math.round((harga * dpPersen) / 100);
+            document.getElementById('dpNominal').value = formatNumber(dpNominal);
+        } else {
+            document.getElementById('dpNominal').value = '0';
+        }
+    }
+
+    function updatePercentFromDP() {
+        let elNominal = document.getElementById('dpNominal');
+        let dpNominal = cleanNumber(elNominal.value);
+        elNominal.value = formatNumber(dpNominal);
+
+        let harga = cleanNumber(document.getElementById('hargaProperty').value);
+        if (harga > 0) {
+            let dpPersen = (dpNominal / harga) * 100;
+            document.getElementById('dpPersen').value = dpPersen.toFixed(2);
+        }
+    }
+
+    function pmt(rate, nper, pv) {
+        if (rate === 0) return pv / nper;
+        let pvif = Math.pow(1 + rate, nper);
+        return (rate * pv * pvif) / (pvif - 1);
+    }
+
+    function calculateMortgage() {
+        let harga = cleanNumber(document.getElementById('hargaProperty').value);
+        let dp = cleanNumber(document.getElementById('dpNominal').value);
+        let plafon = harga - dp;
+        let tenorY = parseInt(document.getElementById('tenor').value);
+
+        if (harga <= 0) {
+            alert('Masukkan harga rumah dengan benar!');
+            return;
+        }
+
+        if (dp >= harga) {
+            alert('Nilai Uang Muka (DP) tidak boleh melebihi atau sama dengan Harga Rumah!');
+            return;
+        }
+
+        document.getElementById('resPlafon').textContent = formatRupiahNum(plafon);
+        document.getElementById('resTenor').textContent = tenorY + ' Tahun';
+        
+        let detailHtml = '';
+
+        if (currentScheme === 'berjenjang') {
+            document.getElementById('resSkema').textContent = 'Fix Berjenjang';
+            
+            let rate1 = 0.0525;
+            let rate2 = 0.0799;
+            let rate3 = 0.0999;
+
+            let totalMonths = tenorY * 12;
+            
+            let m1 = Math.min(36, totalMonths);
+            let angsuran1 = pmt(rate1 / 12, totalMonths, plafon);
+
+            let balance = plafon;
+            for(let i=0; i<m1; i++) {
+                let interest = balance * (rate1 / 12);
+                let principal = angsuran1 - interest;
+                balance -= principal;
+            }
+
+            let m2 = Math.min(36, totalMonths - m1);
+            let angsuran2 = 0;
+            if (m2 > 0) {
+                angsuran2 = pmt(rate2 / 12, totalMonths - m1, balance);
+                for(let i=0; i<m2; i++) {
+                    let interest = balance * (rate2 / 12);
+                    let principal = angsuran2 - interest;
+                    balance -= principal;
+                }
+            }
+
+            let m3 = totalMonths - m1 - m2;
+            let angsuran3 = 0;
+            if (m3 > 0) {
+                angsuran3 = pmt(rate3 / 12, totalMonths - m1 - m2, balance);
+            }
+
+            detailHtml = `
+                <table class="table-res">
+                    <thead>
+                        <tr>
+                            <th>Periode</th>
+                            <th>Ujrah / Rate</th>
+                            <th>Angsuran / Bulan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tahun ke 1 - 3</td>
+                            <td>5.25%</td>
+                            <td><strong>${formatRupiahNum(angsuran1)}</strong></td>
+                        </tr>
+                        ${m2 > 0 ? `
+                        <tr>
+                            <td>Tahun ke 4 - 6</td>
+                            <td>7.99%</td>
+                            <td><strong>${formatRupiahNum(angsuran2)}</strong></td>
+                        </tr>
+                        ` : ''}
+                        ${m3 > 0 ? `
+                        <tr>
+                            <td>Sisa Tenor (Thn ke 7-${tenorY})</td>
+                            <td>9.99%</td>
+                            <td><strong>${formatRupiahNum(angsuran3)}</strong></td>
+                        </tr>
+                        ` : ''}
+                    </tbody>
+                </table>
+            `;
+
+        } else {
+            document.getElementById('resSkema').textContent = 'Pasti Fixed';
+            let rate = 0;
+            if (tenorY <= 5) rate = 0.0775;
+            else if (tenorY <= 10) rate = 0.0875;
+            else if (tenorY <= 15) rate = 0.0950;
+            else rate = 0.1025;
+
+            let totalMonths = tenorY * 12;
+            let angsuran = pmt(rate / 12, totalMonths, plafon);
+
+            detailHtml = `
+                <div class="result-item" style="margin-top: 15px; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid var(--gold);">
+                    <div>
+                        <span class="result-label" style="display:block;">Angsuran Tetap (Flat hingga lunas)</span>
+                        <span style="font-size:0.8rem; color:#666;">Margin/Ujrah: ${(rate*100).toFixed(2)}%</span>
+                    </div>
+                    <span class="result-value highlight">${formatRupiahNum(angsuran)} / bln</span>
+                </div>
+            `;
+        }
+
+        document.getElementById('angsuranDetail').innerHTML = detailHtml;
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    window.onload = function() {
+        initTenorOptions();
+    };
+</script>
+
+</body>
+</html>
